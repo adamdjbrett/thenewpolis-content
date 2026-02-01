@@ -1,0 +1,67 @@
+---
+layout: base.njk
+---
+
+{% include "schema-breadcrumb.njk" %}
+{% include "schema-blog-post.njk" %}
+
+<nav class="breadcrumbs">
+  {%- for crumb in page.date | breadcrumbs(title, metadata) -%}
+    {% if crumb.url %}<a href="{{ crumb.url }}">{{ crumb.text }}</a>{% else %}<span>{{ crumb.text }}</span>{% endif %}
+    {%- if not loop.last %} / {% endif -%}
+  {%- endfor -%}
+</nav>
+<div class="post-meta">
+  {% if author %}
+    <span class="post-meta-author">By <a href="/author/{{ author | slugify }}/">{{ author }}</a></span>
+  {% endif %}
+  {% if author and categories %} <span class="post-meta-sep">|</span> {% endif %}
+  {% if categories %}
+    <span class="post-meta-categories">
+      <span class="post-meta-label">categories:</span>
+      {% for category in categories %}
+        <a href="/category/{{ category | slugify }}/">{{ category }}</a>{% if not loop.last %}, {% endif %}
+      {% endfor %}
+    </span>
+  {% endif %}
+</div>
+
+<article class="post">
+  {% if image %}
+  <figure class="post-hero">
+    <img src="{{ image }}" alt="{{ title }}">
+  </figure>
+  {% endif %}
+  <h1 data-pagefind-meta="title" data-pagefind-weight="10">{{ title }}</h1>
+  <time datetime="{{ page.date | date('yyyy-MM-dd') }}">
+    {{ page.date | readableDate }}
+  </time>
+
+  <div class="post-content">
+    {{ content | safe }}
+    {% if tags %}
+      <div class="post-tags">
+        <span class="post-tags-label">tags:</span>
+        {% for tag in tags %}
+          {% set tagToken = tag | lower | replace(" ", "") | replace("_", "") | replace("-", "") %}
+          <a href="/tag/{{ tag | slugify }}/">#{{ tagToken }}</a>{% if not loop.last %}, {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+    <section class="share-openly" aria-label="Share this Post">
+      <h2>Share this Post</h2>
+      {% set shareUrl = (metadata.url + page.url) | urlencode %}
+      {% set shareText = (title or metadata.title) | urlencode %}
+      <a href="https://shareopenly.org/share/?url={{ shareUrl }}&text={{ shareText }}">Share via ShareOpenly</a>
+    </section>
+  </div>
+
+  {% set previousPost = collections.posts | getPreviousCollectionItem(page) %}
+  {% set nextPost = collections.posts | getNextCollectionItem(page) %}
+  {% if previousPost or nextPost %}
+  <nav class="pagination" aria-label="Post navigation">
+    {% if previousPost %}<a href="{{ previousPost.url }}">← Back</a>{% else %}<span></span>{% endif %}
+    {% if nextPost %}<a href="{{ nextPost.url }}">Forward →</a>{% else %}<span></span>{% endif %}
+  </nav>
+  {% endif %}
+</article>
