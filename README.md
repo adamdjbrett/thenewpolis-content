@@ -40,6 +40,7 @@ High-level summary of completed work across the New Polis Eleventy migration:
 - Fixed tag/category index templates: tags now use `post.data.tags`, categories/tags lists now populate.
 - Added site description beneath the title in header.
 - Added author + categories (clickable, with separator and label) under breadcrumbs; added tags line above “Share this Post” with `#` formatting and normalization rules.
+- Scanned `public/` for size-variant duplicates (e.g., `-300x200`) where originals exist, updated references to the originals, and removed the duplicates.
 
 ## WordPress → Eleventy: Import, Build, Update (Based on This Project)
 
@@ -66,6 +67,9 @@ This section documents the practical workflow we used here to convert a WordPres
    - WordPress docs   → `public/docs/wp-content/uploads/...`
 3. Update content links to point at `/images/…` or `/docs/…`.
 4. Create redirects for moved assets (via `_redirects` or an Eleventy `redirects.njk`).
+5. Remove size-variant duplicates:
+   - Replace any `-300x200`-style references with the base image.
+   - Delete the size-variant files in `public/` when the base image exists.
 
 ### 3) Add Metadata & Site Features
 
