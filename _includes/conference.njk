@@ -1,0 +1,16 @@
+---
+layout: base.njk
+---
+
+{% include "schema-breadcrumb.njk" %}
+{% include "schema-blog-post.njk" %}
+
+<article class="post">
+  <h1>{{ title }}</h1>
+  {% if date %}
+  <time datetime="{{ page.date | date('yyyy-MM-dd') }}">{{ page.date | readableDate }}</time>
+  {% endif %}
+  <div class="post-content">
+    {{ content | safe }}
+  </div>
+</article>
